@@ -138,7 +138,7 @@ public class Window extends JFrame {
 										eOut[out] = Double.parseDouble(expectedOutputs[ds][out].getText());
 									}
 																	
-									brain.backPropagation(ins, eOut);
+									brain.backPropagation(ins, dataSetsAmount, eOut);
 								
 									for (int out = 0; out < outputAmount; out++) {
 										outputs[ds][out].setText(Double.toString(brain.getOutputs()[out]));

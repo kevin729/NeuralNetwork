@@ -1,14 +1,14 @@
 
 public class Neuron {
 	
-	private double[] inputs;
-	private double[] weights;
+	public double[] inputs;
+	public double[] weights;
 	private double weightedSum;
 	private double fire = 0;
 	private double fire_derivative = 0;
 	private double error = 0;
 	private double error_derivative = 0;
-	private boolean bias = false;
+	public boolean bias = false;
 	
 	/**
 	 * Constructor for input neuron

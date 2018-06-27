@@ -71,13 +71,27 @@ public class NeuralNetwork {
 		}
 	}
 	
-	public void backPropagation(double[] inputs, double ... targets) {
+	public void backPropagation(double[] inputs, int datasets, double ... targets) {
 		if (targets.length != layerSizes[layers_amount-1]) {
 			return;
 		}
-		feedForward(inputs);
-		calculateErrors(targets);
-		adjustWeights();
+				
+		double error = 0;
+		double errorD = 0;
+		
+		for (int l = layers_amount-1; l > 0; l--) {
+			for (int n = 0; n < layerSizes[l]; n++) {
+				if (l == layers_amount-1) {
+					error = Math.pow(targets[n] - neurons[l][n].getFired(), 2);
+					errorD = 2 * (neurons[l][n].getFired() - targets[n]);
+				}
+				
+				double fireD = neurons[l][n].getFired() * (1 - neurons[l][n].getFired());
+				for (int w = 0; w < neurons[l][n].weights.length; w++) {
+					weights[l-1][n][w] -= errorD * fireD * neurons[l][n].inputs[w] * LEARNING_RATE;
+				}
+			}
+		}
 		feedForward(inputs);
 	}
 	
