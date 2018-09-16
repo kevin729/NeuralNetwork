@@ -45,7 +45,7 @@ public class NeuralNetwork {
 				this.weights[l-1] = new double[layerSizes[l]][layerSizes[l-1]+1];
 				for (int n = 0; n < this.layerSizes[l]; n++) {
 					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
-						this.weights[l-1][n][pn] = 1.0;
+						this.weights[l-1][n][pn] = Math.random();
 					}
 				}
 			}
@@ -75,6 +75,8 @@ public class NeuralNetwork {
 		if (targets.length != layerSizes[layers_amount-1]) {
 			return;
 		}
+		
+		feedForward(inputs);
 				
 		double error = 0;
 		double errorD = 0;
@@ -92,31 +94,10 @@ public class NeuralNetwork {
 				}
 			}
 		}
+		
 		feedForward(inputs);
 	}
-	
-	private void calculateErrors(double ... targets) {
-		for (int l = layers_amount-1; l > 0; l--) {
-			for (int n = 0; n < layerSizes[l]+1; n++) {
-				//calculates error from output neurons
-				if (l == layers_amount-1 && n != layerSizes[layers_amount-1]) {
-					neurons[l][n].calculateError(targets[n]);
-				//sets error to other neurons
-				} else if (l != layers_amount-1) {
-					neurons[l][n].addErrors(n, neurons[l+1]);
-				}
-			}
-		}
-	}
-	
-	private void adjustWeights() {
-		for (int l = 1; l < layers_amount; l++) {
-			for (int n = 0; n < layerSizes[l]; n++) {				
-				this.weights[l-1][n] = neurons[l][n].adjustWeights();
-			}
-		}
-	}
-	
+		
 	public double[] getOutputs() {
 		double[] outputs = new double[this.layerSizes[this.layers_amount-1]];
 		

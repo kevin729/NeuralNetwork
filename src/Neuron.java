@@ -52,22 +52,7 @@ public class Neuron {
 		
 		return this.weights;
 	}
-	
-	public void calculateError(double target) {
-		this.error = Math.pow(this.fire - target, 2);
-		this.error_derivative = 2*(this.fire - target);
-	}
-	
-	public void addErrors(int index, Neuron... nextNeurons) {
- 		double errorSum = 0.0;
-		for (int nn = 0; nn < nextNeurons.length; nn++) {
-			if (!nextNeurons[nn].bias) {
-				errorSum += nextNeurons[nn].weights[index] * nextNeurons[nn].error;
-			}	
-		}
-		this.error = errorSum * this.fire_derivative;
-	}
-	
+		
 	public void activationFunction()
 	{		
 		this.fire = Utils.sigmoid(this.weightedSum);
