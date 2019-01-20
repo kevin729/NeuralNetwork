@@ -1,3 +1,4 @@
+package pp;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,25 +21,27 @@ public class Window extends JFrame {
 	
 	private Thread learn;
 	
-	private int dataSetsAmount = 1;
-	private int inputAmount = 2;
-	private int outputAmount = 1;
+	public int dataSetsAmount = 2;
+	public int inputAmount = 2;
+	public int outputAmount = 1;
 		
-	private JTextField[][] inputs;
-	private JTextField[][] expectedOutputs;
-	private JTextField[][] outputs;
+	public JTextField[][] inputs;
+	public JTextField[][] expectedOutputs;
+	public JTextField[][] outputs;
 	
-	private JButton goBtn;
-	private JButton trainBtn;
-	private JButton stopBtn;
+	public JButton goBtn;
+	public JButton trainBtn;
+	public JButton stopBtn;
 	
 	private JButton addDataSetBtn;
 	private JButton removeDataSetBtn;
 			
 	public Window(NeuralNetwork brain) {
 		super("Neural Network");
-		
 		this.brain = brain;
+		
+		inputAmount = brain.getLayerSizes()[0];
+		outputAmount = brain.getLayerSizes()[brain.getLayers_amount()-1];
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
@@ -122,14 +125,15 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double[] ins = new double[inputAmount];
 				double[] eOut = new double[outputAmount];
-				
 				try {
+					
 					learn = new Thread() {
+						int ds = 0;
 						public void run() {
 							stopBtn.setEnabled(true);
 							trainBtn.setEnabled(false);
 							while (!Thread.currentThread().isInterrupted()) {
-								for (int ds = 0; ds < dataSetsAmount; ds++) {
+								for (ds = 0; ds < dataSetsAmount; ds++) {
 									for (int in = 0; in < inputAmount; in++) {
 										ins[in] = Double.parseDouble(inputs[ds][in].getText());
 									}
@@ -163,6 +167,7 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				learn.interrupt();
+				brain.setRandomWeights();
 			}
 		});
 		

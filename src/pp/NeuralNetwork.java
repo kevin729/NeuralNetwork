@@ -1,4 +1,7 @@
+package pp;
 import java.util.stream.*;
+
+import pp.Utils.ActivationFunction;
 
 public class NeuralNetwork {
 	
@@ -8,10 +11,13 @@ public class NeuralNetwork {
 	private int layers_amount;
 	private int neuron_amount;
 	
-	public static final double LEARNING_RATE = 0.5;
+	private double maxWeight = 0.5;
+	private double minWeight = -0.5;
+	
+	public static final double LEARNING_RATE = 0.05;
 	
 	
-	public NeuralNetwork(int... layerSizes) {
+	public NeuralNetwork(ActivationFunction af, int... layerSizes) {
 		this.layerSizes = layerSizes;
 		this.layers_amount = layerSizes.length;
 		this.neuron_amount = IntStream.of(this.layerSizes).sum();
@@ -29,15 +35,15 @@ public class NeuralNetwork {
 			//setup input and hidden neurons
 			for (int n = 0; n < this.layerSizes[l]; n++) {
 				if (l == 0) {
-					neurons[l][n] = new Neuron();
+					neurons[l][n] = new Neuron(af);
 				} else {
-					neurons[l][n] = new Neuron(layerSizes[l-1] + 1);
+					neurons[l][n] = new Neuron(af, layerSizes[l-1] + 1);
 				}
 			}
 			
 			//setup bias neurons
 			if (l != layers_amount-1) {
-				neurons[l][this.layerSizes[l]] = new Neuron(1.0);
+				neurons[l][this.layerSizes[l]] = new Neuron(af, 1.0);
 			}
 			
 			//setup weights
@@ -45,13 +51,17 @@ public class NeuralNetwork {
 				this.weights[l-1] = new double[layerSizes[l]][layerSizes[l-1]+1];
 				for (int n = 0; n < this.layerSizes[l]; n++) {
 					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
-						this.weights[l-1][n][pn] = Math.random();
+						if (pn == this.layerSizes[l-1]) {
+							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						} else {
+							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						}
 					}
 				}
 			}
 		}
 	}
-
+	
 	public void feedForward(double ... inputs) {
 		if (inputs.length != layerSizes[0]) {
 			return;
@@ -70,21 +80,19 @@ public class NeuralNetwork {
 			}
 		}
 	}
-	
+
 	public void backPropagation(double[] inputs, int datasets, double ... targets) {
 		if (targets.length != layerSizes[layers_amount-1]) {
 			return;
 		}
 		
 		feedForward(inputs);
-				
-		double error = 0;
+
 		double errorD = 0;
 		
 		for (int l = layers_amount-1; l > 0; l--) {
 			for (int n = 0; n < layerSizes[l]; n++) {
 				if (l == layers_amount-1) {
-					error = Math.pow(targets[n] - neurons[l][n].getFired(), 2);
 					errorD = 2 * (neurons[l][n].getFired() - targets[n]);
 				}
 				
@@ -107,7 +115,32 @@ public class NeuralNetwork {
 		
 		return outputs;
 	}
-
+	
+	public void setRandomWeights() {
+		for (int l = 0; l < this.layers_amount; l++) {
+			
+			//setup weights
+			if (l != 0) {
+				this.weights[l-1] = new double[layerSizes[l]][layerSizes[l-1]+1];
+				for (int n = 0; n < this.layerSizes[l]; n++) {
+					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
+						if (pn == this.layerSizes[l-1]) {
+							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						} else {
+							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void setWeights(double[] inputs, int index) {
+		for (int i = 0; i < inputs.length; i++) {
+			weights[0][index][i] = inputs[i];
+		}
+	}
+	
 	public Neuron[][] getNeurons() {
 		return neurons;
 	}
