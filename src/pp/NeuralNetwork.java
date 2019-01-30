@@ -1,6 +1,5 @@
 package pp;
 import java.util.stream.*;
-
 import pp.Utils.ActivationFunction;
 
 public class NeuralNetwork {
@@ -16,7 +15,7 @@ public class NeuralNetwork {
 	
 	private ActivationFunction af;
 	
-	public static final double LEARNING_RATE = 0.5;
+	public static final double LEARNING_RATE = 1;
 	
 	
 	public NeuralNetwork(ActivationFunction af, int... layerSizes) {
@@ -54,10 +53,10 @@ public class NeuralNetwork {
 				this.weights[l-1] = new double[layerSizes[l]][layerSizes[l-1]+1];
 				for (int n = 0; n < this.layerSizes[l]; n++) {
 					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
-						if (pn == this.layerSizes[l-1]) {
-							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						if ((n == 0 && pn == 1) || (n == 1 && pn == 0)) {
+							this.weights[l-1][n][pn] = minWeight;
 						} else {
-							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+							this.weights[l-1][n][pn] = maxWeight;
 						}
 					}
 				}
@@ -70,8 +69,6 @@ public class NeuralNetwork {
 			return;
 		}
 		
-		int result = 0;
-		
 		for (int l = 0; l < this.layers_amount; l++) {
 			for (int n = 0; n < this.layerSizes[l]; n++) {
 				if (l == 0) {
@@ -80,9 +77,7 @@ public class NeuralNetwork {
 					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
 						neurons[l][n].connect(weights[l-1][n][pn], neurons[l-1][pn], pn);
 					}
-					neurons[l][n].activationFunction();
-					
-					
+					neurons[l][n].activationFunction();	
 				}
 			}
 		}
@@ -136,10 +131,10 @@ public class NeuralNetwork {
 				this.weights[l-1] = new double[layerSizes[l]][layerSizes[l-1]+1];
 				for (int n = 0; n < this.layerSizes[l]; n++) {
 					for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
-						if (pn == this.layerSizes[l-1]) {
-							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+						if ((n == 0 && pn == 1) || (n == 1 && pn == 0)) {
+							this.weights[l-1][n][pn] = minWeight;
 						} else {
-							this.weights[l-1][n][pn] = (Math.random() * (maxWeight - (minWeight))) + (minWeight);
+							this.weights[l-1][n][pn] = maxWeight;
 						}
 					}
 				}
