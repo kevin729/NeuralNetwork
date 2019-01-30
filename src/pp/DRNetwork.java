@@ -7,13 +7,13 @@ import java.awt.image.DataBufferInt;
 
 import pp.Utils.ActivationFunction;
 
-public class ConvolutionalNetwork {
+public class DRNetwork {
 	
-	public NeuralNetwork brain;
+	private NeuralNetwork brain;
 	private double[][] images;
 	private int index = 0;
 	
-	public ConvolutionalNetwork(ActivationFunction af, int... layerSizes) {
+	public DRNetwork(ActivationFunction af, int... layerSizes) {
 		brain = new NeuralNetwork(af, layerSizes);
 		images = new double[layerSizes[layerSizes.length-1]][layerSizes[0]];
 	}

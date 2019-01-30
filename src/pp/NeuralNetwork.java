@@ -11,13 +11,16 @@ public class NeuralNetwork {
 	private int layers_amount;
 	private int neuron_amount;
 	
-	private double maxWeight = 0.5;
-	private double minWeight = -0.5;
+	private double maxWeight = -0.5;
+	private double minWeight = 0.5;
 	
-	public static final double LEARNING_RATE = 0.05;
+	private ActivationFunction af;
+	
+	public static final double LEARNING_RATE = 0.5;
 	
 	
 	public NeuralNetwork(ActivationFunction af, int... layerSizes) {
+		this.af = af;
 		this.layerSizes = layerSizes;
 		this.layers_amount = layerSizes.length;
 		this.neuron_amount = IntStream.of(this.layerSizes).sum();
@@ -67,6 +70,8 @@ public class NeuralNetwork {
 			return;
 		}
 		
+		int result = 0;
+		
 		for (int l = 0; l < this.layers_amount; l++) {
 			for (int n = 0; n < this.layerSizes[l]; n++) {
 				if (l == 0) {
@@ -76,6 +81,8 @@ public class NeuralNetwork {
 						neurons[l][n].connect(weights[l-1][n][pn], neurons[l-1][pn], pn);
 					}
 					neurons[l][n].activationFunction();
+					
+					
 				}
 			}
 		}
@@ -96,7 +103,12 @@ public class NeuralNetwork {
 					errorD = 2 * (neurons[l][n].getFired() - targets[n]);
 				}
 				
-				double fireD = neurons[l][n].getFired() * (1 - neurons[l][n].getFired());
+				double fireD = 1;
+				
+				if (this.af == ActivationFunction.SIGMOID) {
+					fireD = neurons[l][n].getFired() * (1 - neurons[l][n].getFired());
+				}
+				
 				for (int w = 0; w < neurons[l][n].weights.length; w++) {
 					weights[l-1][n][w] -= errorD * fireD * neurons[l][n].inputs[w] * LEARNING_RATE;
 				}

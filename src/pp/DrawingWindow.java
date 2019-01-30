@@ -25,10 +25,10 @@ public class DrawingWindow extends JFrame {
 	
 	private JButton go = new JButton("Go");
 	private JButton train = new JButton("Train");
-	private ConvolutionalNetwork brain;
+	private DRNetwork brain;
 	private DrawingPanel panel = new DrawingPanel();
 	
-	public DrawingWindow(ConvolutionalNetwork brain) {
+	public DrawingWindow(DRNetwork brain) {
 		this.brain = brain;
 		
 		go.addActionListener(new ActionListener() {
@@ -108,7 +108,7 @@ public class DrawingWindow extends JFrame {
 			repaint();
 		}
 		
-		public int[] getPixels() {
+		private int[] getPixels() {
 			return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 		}
 	}

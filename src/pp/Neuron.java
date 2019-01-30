@@ -49,6 +49,20 @@ public class Neuron {
 			case NONE:
 				this.fire = this.weightedSum;
 				break;
+			case HEAVISDE:
+				if (this.weightedSum <= 0) {
+					this.fire = 0;
+				} else {
+					this.fire = 1;
+				}
+				break;
+			case SIGNUM:
+				if (this.weightedSum <= 0) {
+					this.fire = -1;
+				} else {
+					this.fire = 1;
+				}
+				break;
 			case SIGMOID:
 				this.fire = Utils.sigmoid(this.weightedSum);
 				break;

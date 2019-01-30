@@ -32,6 +32,7 @@ public class Window extends JFrame {
 	public JButton goBtn;
 	public JButton trainBtn;
 	public JButton stopBtn;
+	public JButton resetBtn;
 	
 	private JButton addDataSetBtn;
 	private JButton removeDataSetBtn;
@@ -73,6 +74,7 @@ public class Window extends JFrame {
 		trainBtn = new JButton("Train");
 		stopBtn = new JButton("Stop");
 		stopBtn.setEnabled(false);
+		resetBtn = new JButton("Reset");
 		
 		addDataSetBtn = new JButton("Add DataSet");
 		removeDataSetBtn = new JButton("Remove DataSet");
@@ -103,20 +105,17 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double[] ins = new double[inputAmount];
 				
-				try {
 					for (int ds = 0; ds < dataSetsAmount; ds++) {
 						for (int in = 0; in < inputAmount; in++) {
 							ins[in] = Double.parseDouble(inputs[ds][in].getText());
 						}
+						
 						brain.feedForward(ins);
 						
 						for (int out = 0; out < outputAmount; out++) {
 							outputs[ds][out].setText(Double.toString(brain.getOutputs()[out]));
 						}
 					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
 			}
 		});
 		
@@ -128,16 +127,15 @@ public class Window extends JFrame {
 				try {
 					
 					learn = new Thread() {
-						int ds = 0;
 						public void run() {
 							stopBtn.setEnabled(true);
 							trainBtn.setEnabled(false);
-							while (!Thread.currentThread().isInterrupted()) {
-								for (ds = 0; ds < dataSetsAmount; ds++) {
+							while(!Thread.currentThread().isInterrupted()) {
+								for (int ds = 0; ds < dataSetsAmount; ds++) {
 									for (int in = 0; in < inputAmount; in++) {
 										ins[in] = Double.parseDouble(inputs[ds][in].getText());
 									}
-								
+									
 									for (int out = 0; out < outputAmount; out++) {
 										eOut[out] = Double.parseDouble(expectedOutputs[ds][out].getText());
 									}
@@ -167,6 +165,13 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				learn.interrupt();
+			}
+		});
+		
+		resetBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				brain.setRandomWeights();
 			}
 		});
@@ -251,6 +256,7 @@ public class Window extends JFrame {
 			add(goBtn, "wrap, alignx center");
 			add(trainBtn, "wrap, alignx center");
 			add(stopBtn, "alignx center");
+			add(resetBtn, "alignx center");
 		}
 	}
 	

@@ -3,7 +3,7 @@ package pp;
 public class Utils {
 	
 	public enum ActivationFunction {
-		NONE, SIGMOID
+		NONE, HEAVISDE, SIGNUM, SIGMOID
 	}
 	
 	public static double sigmoid(double x) {
