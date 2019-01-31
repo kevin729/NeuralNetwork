@@ -45,6 +45,9 @@ public class DrawingWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				brain.addImage(panel.getPixels(), panel.getSize().width, panel.getSize().height);
+				try {
+					brain.saveWeights();
+				} catch (Exception ex) {}
 				panel.clear();
 			}
 		});
@@ -56,6 +59,7 @@ public class DrawingWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 400);
 		setLocationRelativeTo(null);
+		setResizable(false);
 		setVisible(true);
 	}
 	

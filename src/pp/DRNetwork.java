@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 
 import pp.Utils.ActivationFunction;
 
@@ -20,6 +21,17 @@ public class DRNetwork {
 	
 	public void feedForward(int[] pixels, int width, int height) {
 		brain.feedForward(normalise(resizeImage(shrinkImage(pixels, width, height), (int)Math.sqrt(brain.getLayerSizes()[0]))));
+		
+		double result = 0;
+		int neuronIndex = 0;
+		for (int i = 0; i < brain.getOutputs().length; i++) {
+			if (brain.getOutputs()[i] > result) {
+				result = brain.getOutputs()[i];
+				neuronIndex = i;
+			}
+		}
+		
+		System.out.println(neuronIndex);
 	}
 	
 	public void addImage(int[] pixels, int width, int height) {
@@ -94,5 +106,13 @@ public class DRNetwork {
 		img.setRGB(0, 0, width, height, newPixels, 0, width);
 		
 		return img;
+	}
+	
+	public void saveWeights() throws IOException {
+		brain.saveWeights();
+	}
+	
+	public void loadWeights(String file) throws IOException {
+		brain.loadWeights(file);
 	}
 }

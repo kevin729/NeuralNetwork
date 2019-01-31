@@ -1,4 +1,10 @@
 package pp;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.stream.*;
 import pp.Utils.ActivationFunction;
 
@@ -10,12 +16,12 @@ public class NeuralNetwork {
 	private int layers_amount;
 	private int neuron_amount;
 	
-	private double maxWeight = -0.5;
-	private double minWeight = 0.5;
+	private double maxWeight = 0.5;
+	private double minWeight = -0.5;
 	
 	private ActivationFunction af;
 	
-	public static final double LEARNING_RATE = 1;
+	public static final double LEARNING_RATE = 0.05;
 	
 	
 	public NeuralNetwork(ActivationFunction af, int... layerSizes) {
@@ -68,7 +74,7 @@ public class NeuralNetwork {
 		if (inputs.length != layerSizes[0]) {
 			return;
 		}
-		
+
 		for (int l = 0; l < this.layers_amount; l++) {
 			for (int n = 0; n < this.layerSizes[l]; n++) {
 				if (l == 0) {
@@ -146,6 +152,41 @@ public class NeuralNetwork {
 		for (int i = 0; i < inputs.length; i++) {
 			weights[0][index][i] = inputs[i];
 		}
+	}
+	
+	public void saveWeights() throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter("weights.nn"));
+		for (int l = 1; l < layers_amount; l++) {
+			for (int n = 0; n < layerSizes[l]; n++) {
+				for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
+					out.write(Double.toString(weights[l-1][n][pn]) + " ");
+				}
+			}
+			out.newLine();
+		}
+		
+		out.flush();
+		out.close();
+	}
+	
+	public void loadWeights(String file) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		int index = 0;
+		String line;
+		
+		for (int l = 1; l < layers_amount; l++) {
+			line = reader.readLine();
+			String[] newWeights = line.split(" ");
+			for (int n = 0; n < layerSizes[l]; n++) {
+				for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
+					weights[l-1][n][pn] = Double.parseDouble(newWeights[index]);
+					index++;
+				}
+				
+			}
+			index = 0;
+		}
+		reader.close();
 	}
 	
 	public Neuron[][] getNeurons() {
