@@ -1,6 +1,7 @@
-package pp;
+package nn;
 
-import pp.Utils.ActivationFunction;
+import utils.Utils;
+import utils.Utils.ActivationFunction;
 
 public class Neuron {
 	

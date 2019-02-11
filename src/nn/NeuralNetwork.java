@@ -1,12 +1,16 @@
-package pp;
+package nn;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.stream.*;
-import pp.Utils.ActivationFunction;
+
+import utils.Utils.ActivationFunction;
 
 public class NeuralNetwork {
 	
@@ -14,7 +18,6 @@ public class NeuralNetwork {
 	private double[][][] weights;
 	private int[] layerSizes;
 	private int layers_amount;
-	private int neuron_amount;
 	
 	private double maxWeight = 0.5;
 	private double minWeight = -0.5;
@@ -28,7 +31,6 @@ public class NeuralNetwork {
 		this.af = af;
 		this.layerSizes = layerSizes;
 		this.layers_amount = layerSizes.length;
-		this.neuron_amount = IntStream.of(this.layerSizes).sum();
 		
 		this.weights = new double[this.layers_amount-1][][];
 		this.neurons = new Neuron[this.layers_amount][];
@@ -189,6 +191,26 @@ public class NeuralNetwork {
 		reader.close();
 	}
 	
+	public void loadWeights(InputStream is) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		int index = 0;
+		String line;
+		
+		for (int l = 1; l < layers_amount; l++) {
+			line = reader.readLine();
+			String[] newWeights = line.split(" ");
+			for (int n = 0; n < layerSizes[l]; n++) {
+				for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
+					weights[l-1][n][pn] = Double.parseDouble(newWeights[index]);
+					index++;
+				}
+				
+			}
+			index = 0;
+		}
+		reader.close();
+	}
+	
 	public Neuron[][] getNeurons() {
 		return neurons;
 	}
@@ -203,9 +225,5 @@ public class NeuralNetwork {
 
 	public int getLayers_amount() {
 		return layers_amount;
-	}
-
-	public int getNeuron_amount() {
-		return neuron_amount;
 	}
 }

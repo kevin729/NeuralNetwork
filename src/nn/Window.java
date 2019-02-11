@@ -1,4 +1,4 @@
-package pp;
+package nn;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -125,7 +125,6 @@ public class Window extends JFrame {
 				double[] ins = new double[inputAmount];
 				double[] eOut = new double[outputAmount];
 				try {
-					
 					learn = new Thread() {
 						public void run() {
 							stopBtn.setEnabled(true);

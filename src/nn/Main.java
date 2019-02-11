@@ -1,11 +1,11 @@
-package pp;
+package nn;
 
-import pp.Utils.ActivationFunction;
+import utils.Utils.ActivationFunction;
 
 public class Main {
 
 	public static void main(String[] args) {
-		NeuralNetwork brain = new NeuralNetwork(ActivationFunction.SIGMOID, 2, 3, 2, 1);
+		NeuralNetwork brain = new NeuralNetwork(ActivationFunction.HEAVISDE, 2, 2, 1);
 		DRNetwork brain2 = new DRNetwork(ActivationFunction.NONE, 128*128, 3);
 		
 		try {

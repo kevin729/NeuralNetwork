@@ -1,12 +1,13 @@
-package pp;
+package nn;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
+import java.io.InputStream;
 
-import pp.Utils.ActivationFunction;
+import utils.Utils.ActivationFunction;
 
 public class DRNetwork {
 	
@@ -17,6 +18,10 @@ public class DRNetwork {
 	public DRNetwork(ActivationFunction af, int... layerSizes) {
 		brain = new NeuralNetwork(af, layerSizes);
 		images = new double[layerSizes[layerSizes.length-1]][layerSizes[0]];
+	}
+	
+	public void feedForward(double[] pixels) {
+		brain.feedForward(pixels);
 	}
 	
 	public void feedForward(int[] pixels, int width, int height) {
@@ -112,7 +117,31 @@ public class DRNetwork {
 		brain.saveWeights();
 	}
 	
-	public void loadWeights(String file) throws IOException {
-		brain.loadWeights(file);
+	public void loadWeights(String file) {
+		Thread loadWeights = new Thread() {
+			public void run() {
+				try {
+					brain.loadWeights(file);
+				} catch (IOException e) {}
+			}
+		};
+		
+		loadWeights.start();
+	}
+	
+	public void loadWeights(InputStream is) {
+		Thread loadWeights = new Thread() {
+			public void run() {
+				try {
+					brain.loadWeights(is);
+				} catch (IOException e) {}
+			}
+		};
+		
+		loadWeights.start();
+	}
+	
+	public double[] getOutputs() {
+		return brain.getOutputs();
 	}
 }
