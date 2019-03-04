@@ -4,8 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 import utils.Utils.ActivationFunction;
 
@@ -30,20 +33,27 @@ public class DRNetwork {
 		double result = 0;
 		int neuronIndex = 0;
 		for (int i = 0; i < brain.getOutputs().length; i++) {
-			if (brain.getOutputs()[i] > result) {
+			if (brain.getOutputs()[i] > result && i != 0) {
+				result = brain.getOutputs()[i];
+				neuronIndex = i;
+			} else if (i == 0) {
 				result = brain.getOutputs()[i];
 				neuronIndex = i;
 			}
+			System.out.println(i + " " + brain.getOutputs()[i]);
 		}
 		
 		System.out.println(neuronIndex);
 	}
 	
-	public void addImage(int[] pixels, int width, int height) {
-		images[index] = normalise(resizeImage(shrinkImage(pixels, width, height), (int)Math.sqrt(brain.getLayerSizes()[0])));
+	public void addImage(int[] pixels, int width, int height) throws IOException {
+		int[] imagePixels = resizeImage(shrinkImage(pixels, width, height), (int)Math.sqrt(brain.getLayerSizes()[0]));
+		images[index] = normalise(imagePixels);
 		
+		saveImage(imagePixels);
 		brain.setWeights(images[index], index);
 		brain.feedForward(images[index]);
+		saveWeights();
 		index++;
 	}
 	
@@ -139,6 +149,13 @@ public class DRNetwork {
 		};
 		
 		loadWeights.start();
+	}
+	
+	public void saveImage(int[] imagePixels) throws IOException {
+		BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+		image.setRGB(0, 0, 128, 128, imagePixels, 0, 128);
+		File out = new File("image" + index+".png");
+		ImageIO.write(image, "png", out);
 	}
 	
 	public double[] getOutputs() {

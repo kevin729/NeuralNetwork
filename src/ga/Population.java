@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Population {
 	private Chromosome[] chromosomes;
+	public double totalFitness = 0;
 	
 	public Population(int length) {
 		chromosomes = new Chromosome[length];
@@ -11,7 +12,7 @@ public class Population {
 		for (int i = 0; i < chromosomes.length; i++) {
 			chromosomes[i] = new Chromosome(GeneticAlgorithm.TARGET_CHROMOSOME.length);
 		}
-	}
+ 	}
 	
 	public void setChromosomes(Chromosome[] children) {
 		for (int c = 0; c < chromosomes.length; c++) {
@@ -23,6 +24,24 @@ public class Population {
 	
 	public Chromosome[] getChromosomes() {
 		return chromosomes;
+	}
+	
+	public void setFitness() {
+		for (int c = 0; c < chromosomes.length; c++) {
+			chromosomes[c].calculateFitness();
+		}
+	}
+	
+	public void setFitnessPercent() {
+		totalFitness = 0;
+		setFitness();
+		for (int c = 0; c < chromosomes.length; c++) {
+			totalFitness += chromosomes[c].getFitness();
+		}
+		
+		for (int c = 0; c < chromosomes.length; c++) {
+			chromosomes[c].fitnessPercent = chromosomes[c].getFitness()/totalFitness;
+		}
 	}
 	
 	public void sortChromosomesByFitness() {

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -104,6 +105,11 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				double[] ins = new double[inputAmount];
+				try {
+					brain.saveWeights();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 					for (int ds = 0; ds < dataSetsAmount; ds++) {
 						for (int in = 0; in < inputAmount; in++) {

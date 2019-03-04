@@ -12,6 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -36,10 +38,9 @@ public class DrawingWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				brain.addImage(panel.getPixels(), panel.getSize().width, panel.getSize().height);
 				try {
-					brain.saveWeights();
-				} catch (Exception ex) {}
+					brain.addImage(panel.getPixels(), panel.getSize().width, panel.getSize().height);
+				} catch (IOException e1) {e1.printStackTrace();}
 				panel.clear();
 			}
 		});
@@ -100,7 +101,7 @@ public class DrawingWindow extends JFrame {
 			g.setPaint(Color.WHITE);
 			g.fillRect(0, 0, getSize().width, getSize().height);
 			g.setColor(Color.BLACK);
-			g.setStroke(new BasicStroke(50));
+			g.setStroke(new BasicStroke(20));
 			repaint();
 		}
 		

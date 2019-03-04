@@ -66,6 +66,10 @@ public class NeuralNetwork {
 						} else {
 							this.weights[l-1][n][pn] = maxWeight;
 						}
+						
+						if (pn == layerSizes[l-1]) {
+							this.weights[l-1][n][pn] = -128*128 + (128*128)/2;
+						}
 					}
 				}
 			}
@@ -89,6 +93,8 @@ public class NeuralNetwork {
 				}
 			}
 		}
+		
+		System.out.println("Bias: " + weights[0][0][layerSizes[0]]);
 	}
 
 	public void backPropagation(double[] inputs, int datasets, double ... targets) {
@@ -177,12 +183,14 @@ public class NeuralNetwork {
 		String line;
 		
 		for (int l = 1; l < layers_amount; l++) {
+			
 			line = reader.readLine();
 			String[] newWeights = line.split(" ");
 			for (int n = 0; n < layerSizes[l]; n++) {
 				for (int pn = 0; pn < this.layerSizes[l-1]+1; pn++) {
 					weights[l-1][n][pn] = Double.parseDouble(newWeights[index]);
 					index++;
+					
 				}
 				
 			}
