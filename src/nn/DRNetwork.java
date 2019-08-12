@@ -46,6 +46,13 @@ public class DRNetwork {
 		System.out.println(neuronIndex);
 	}
 	
+	public void addImage(double[] pixels) throws IOException {
+		brain.setWeights(pixels, index);
+		brain.feedForward(pixels);
+		saveWeights();
+		index++;
+	}
+	
 	public void addImage(int[] pixels, int width, int height) throws IOException {
 		int[] imagePixels = resizeImage(shrinkImage(pixels, width, height), (int)Math.sqrt(brain.getLayerSizes()[0]));
 		images[index] = normalise(imagePixels);

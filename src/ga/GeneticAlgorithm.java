@@ -42,8 +42,8 @@ public class GeneticAlgorithm {
 				System.out.println("Chromosome " + i + ": " + Arrays.toString(population.getChromosomes()[i].getGenes()) + " Fitness: " + population.getChromosomes()[i].getFitness() + " Fitness Percent: " + population.getChromosomes()[i].fitnessPercent);
 			}
 			System.out.println(population.totalFitness);
-		} while (generation != 100);
-		//population.getChromosomes()[0].getFitness() != TARGET_CHROMOSOME.length
+		} while (population.getChromosomes()[0].getFitness() != TARGET_CHROMOSOME.length);
+		
 	}
 	
 	private void evolve(int index) {

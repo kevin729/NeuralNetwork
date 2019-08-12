@@ -1,6 +1,7 @@
 package nn;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,15 +20,16 @@ public class NeuralNetwork {
 	private int[] layerSizes;
 	private int layers_amount;
 	
-	private double maxWeight = 0.5;
-	private double minWeight = -0.5;
+	private double maxWeight = 0.05;
+	private double minWeight = -0.05;
 	
 	private ActivationFunction af;
 	
-	public static final double LEARNING_RATE = 0.05;
+	public static final double LEARNING_RATE = 0.5;
 	
 	
 	public NeuralNetwork(ActivationFunction af, int... layerSizes) {
+		System.out.println("made");
 		this.af = af;
 		this.layerSizes = layerSizes;
 		this.layers_amount = layerSizes.length;
@@ -66,10 +68,6 @@ public class NeuralNetwork {
 						} else {
 							this.weights[l-1][n][pn] = maxWeight;
 						}
-						
-						if (pn == layerSizes[l-1]) {
-							this.weights[l-1][n][pn] = -128*128 + (128*128)/2;
-						}
 					}
 				}
 			}
@@ -93,8 +91,6 @@ public class NeuralNetwork {
 				}
 			}
 		}
-		
-		System.out.println("Bias: " + weights[0][0][layerSizes[0]]);
 	}
 
 	public void backPropagation(double[] inputs, int datasets, double ... targets) {
@@ -135,6 +131,12 @@ public class NeuralNetwork {
 		}
 		
 		return outputs;
+	}
+	
+	public void setBias(double weight, int layer) {
+		for(int n = 0; n < layerSizes[layer+1]; n++) {
+			weights[layer][n][layerSizes[layer]] = weight;
+		}
 	}
 	
 	public void setRandomWeights() {

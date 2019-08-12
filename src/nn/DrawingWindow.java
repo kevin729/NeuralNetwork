@@ -3,6 +3,7 @@ package nn;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -25,6 +26,8 @@ public class DrawingWindow extends JFrame {
 	private DrawingPanel panel = new DrawingPanel();
 	
 	public DrawingWindow(DRNetwork brain) {
+		go.setFont(new Font("Arial", Font.PLAIN, 40));
+		train.setFont(new Font("Arial", Font.PLAIN, 40));
 		go.addActionListener(new ActionListener() {
 			
 			@Override
